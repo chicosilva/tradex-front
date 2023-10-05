@@ -1,0 +1,14 @@
+{
+  "langs": [
+    {
+      "icon": "flag-icon-us",
+      "lan": "English",
+      "span": "(US)"
+    },
+    {
+      "icon": "flag-icon-pt",
+      "lan": "Português",
+      "span": "(BR)"
+    }
+  ]
+}
