@@ -427,6 +427,7 @@ export default {
                 this.$toast.error(`Erro ao remover o arquivo`, {position: 'top-right' });
                 return;
             }
+            this.pricevariation = {};
             this.product.pricevariations = this.product.pricevariations.filter(e=> e.id != this.pricevariation.id);
             this.ctrl.dialog = false;
             this.$toast.success(`Arquivo removido com sucesso!`,  {position: 'top-right' });
