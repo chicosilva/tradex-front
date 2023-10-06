@@ -126,9 +126,6 @@ export default {
     this.users = users.data.results;
     this.ctrl.totalItems = users.data.count;
 
-    const user_result = await this.userService.getUserData();
-    const userData = user_result.data;
-
     if(userData.is_manager){
       this.is_manager = true;
     }

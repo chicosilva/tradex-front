@@ -14,7 +14,7 @@ export var menuItems = {
       children: [
         {
           path: "/documents/list/",
-          title: "Documentos",
+          title: "Lista de Produtos",
           type: "link",
           active: false,
           name: 'documents:list',

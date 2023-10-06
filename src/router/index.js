@@ -67,7 +67,7 @@ const routes = [
         name: "documents:list",
         component: DocumentList,
         meta: {
-          title: "Lista de documentos",
+          title: "Lista de Produtos",
         },
       },
 

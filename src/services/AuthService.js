@@ -23,8 +23,4 @@ export default class AuthService {
     return await httpsAllowAny.post(`/register/${uuid}/confirm/`);
   }
 
-  async checkUserApproved() {
-    return await Http.get(`/company-users/check-user-approved/`);
-  }
-
 }

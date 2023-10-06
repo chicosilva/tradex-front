@@ -18,13 +18,12 @@
 </template>
 
 <script>
-  import UserService from "@/services/UserService";
+ 
   export default {
     name: 'Profile',
 
     async mounted() {
-      const user_result = await this.userService.getUserData();
-      this.user = user_result.data;
+      
     },
 
     methods: {
@@ -33,15 +32,13 @@
             localStorage.removeItem('docfacil');
             localStorage.removeItem('docfacil-refresh');  
             this.$router.replace('/auth/login');
-            
           }
     },
 
     data() {
       return {
         
-        user: {},
-        userService: new UserService(),
+        user: {}
       };
   },
 

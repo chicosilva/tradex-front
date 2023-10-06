@@ -1,5 +1,5 @@
 <template>
-    <Breadcrumbs main="Documentos" :title="product.title" />
+    <Breadcrumbs main="Produtos" :title="product.title" />
     
     <div class="card">
         <div class="card-body">
@@ -181,7 +181,6 @@
                                                 <th scope="col">Data Início</th>
                                                 <th scope="col">Data Fim</th>
                                                 <th scope="col">Preço</th>
-                                                <th scope="col">Data do envio</th>
                                                 <th scope="col" class="text-center">Ações</th>
                                             </tr>
                                         </thead>
@@ -195,7 +194,6 @@
                                                 <td> 
                                                     {{ item.price }}
                                                 </td>
-                                                <td>{{ item.created_at }}</td>
                                                 <td class="text-center">
                                                     <a href="#" @click.prevent="openEditDialog(item)" class="p-1">
                                                         <span class="action-box large delete-btn"
@@ -216,8 +214,14 @@
                                 </div>
 
                             </div>
-
-                            
+                            <div class="col-md-12 mb-3">
+                                
+                                <Bar v-show="product.pricevariations.length"
+                                    id="my-chart-id"
+                                    :options="chartOptions"
+                                    :data="chartData"
+                                />
+                            </div>
 
                         </div>
                     </div>
@@ -260,7 +264,7 @@
                     </div>
 
                     <div class="col-md-12 mb-3">
-                        <VueDatePicker placeholder="Data início" v-model="pricevariation.end_date" auto-apply locale="pt-BR" :format="format" :enable-time-picker="false"></VueDatePicker>
+                        <VueDatePicker placeholder="Data fim" v-model="pricevariation.end_date" auto-apply locale="pt-BR" :format="format" :enable-time-picker="false"></VueDatePicker>
                     </div>
                     
                 </div>
@@ -300,18 +304,43 @@
 import ProductService from '@/services/ProductService';
 import VariationService from '@/services/VariationService';
 import RemoveDialog from "@/components/RemoveDialog.vue";
+import { Bar } from 'vue-chartjs';
+import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
+
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
 export default {
 
     components:{
-        RemoveDialog
+        RemoveDialog,
+        Bar
     },
     async mounted() {
         const product = await this.productService.getProductById(this.$route.params.id);
         this.product = product.data;
+        this.mountChart();
+
     },
 
     methods: {
+
+        async mountChart(){
+
+            this.product.pricevariations.forEach(e=>{
+                this.daysChart.push(`${e.start_date} - ${e.end_date}`);
+            })
+
+            this.chartData = {
+                labels: this.daysChart,
+                datasets: [
+                    {
+                        label: 'Preço',
+                        backgroundColor: '#f87979',
+                        data: this.product.pricevariations.map(e=> e.price)
+                    }
+                ]
+            }
+        },
 
         async submit(){
 
@@ -340,10 +369,11 @@ export default {
                 return;
             }
             this.ctrl.open_add_product = false;
-            this.$toast.success('Produto adicionado com sucesso!',  {position: 'top-right' });
+            this.$toast.success('Preço adicionado com sucesso!',  {position: 'top-right' });
 
             const product = await this.productService.getProductById(this.$route.params.id);
             this.product = product.data;
+            this.mountChart();
             this.pricevariation = {};
 
         },
@@ -423,6 +453,15 @@ export default {
 
     data() {
         return {
+            daysChart: [],
+            chartData: {
+                labels: [],
+                datasets: [ { data: [] } ]
+            },
+            chartOptions: {
+                responsive: true
+            },
+
             pricevariation: {},
             files: [],
             defaultRules: [(val) => (val || "").length > 0 || "Campo obrigatório"],
