@@ -1,4 +1,4 @@
-# cuba-vue3
+
 
 ## Project setup
 ```
